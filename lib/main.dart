@@ -1,3 +1,4 @@
+import 'package:abc/provider/extra_time_provider.dart';
 import 'package:abc/provider/timer_provider.dart';
 import 'package:abc/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ChangeNotifierProvider<TimerProvider>(
-        create: (context) => TimerProvider(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => TimerProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ExtraTimerProvider(),
+          )
+        ],
         child: HomeScreen(),
       ),
+      // home: ChangeNotifierProvider<TimerProvider>(
+      //   create: (context) => TimerProvider(),
+      //   child: HomeScreen(),
+      // ),
     );
   }
 }
