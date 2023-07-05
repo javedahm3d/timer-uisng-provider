@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:abc/provider/extra_time_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/foundation.dart';
@@ -35,7 +34,6 @@ class TimerProvider with ChangeNotifier {
   }
 
   void startTimer(int hr, int min, int sec) async {
-    ExtraTimerProvider().startTimer();
     _hour = hr;
     _minute = min;
     _seconds = sec;
@@ -69,10 +67,8 @@ class TimerProvider with ChangeNotifier {
   }
 
   void stopTimer() {
-    // ExtraTimerProvider extraTimerProvider =
-    //     Provider.of<ExtraTimerProvider>(context, listen: false);
     if (_startEnable == false) {
-      _startEnable = true;
+      _startEnable = false;
       _continueEnable = true;
       _stopEnable = false;
       _timer!.cancel();
@@ -85,24 +81,54 @@ class TimerProvider with ChangeNotifier {
     _stopEnable = true;
     _continueEnable = false;
 
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_seconds > 1) {
-        _seconds--;
-      } else if (_seconds == 1 && _hour == 0 && _minute == 0) {
-        _seconds--;
-        stopTimer();
-        ExtrastartTimer();
+    if (_seconds == 0 && _hour == 0 && _minute == 0) {
+      continueExtraTimer();
+    } else {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (_seconds > 1) {
+          _seconds--;
+        } else if (_seconds == 1 && _hour == 0 && _minute == 0) {
+          _seconds--;
+          stopTimer();
+          ExtrastartTimer();
 
-        return;
-      } else if (_seconds == 0) {
-        _seconds = 59;
-        if (_minute == 0) {
-          if (_hour != 0) {
-            _hour--;
-            _minute = 59;
+          return;
+        } else if (_seconds == 0 && _minute != 0) {
+          _seconds = 59;
+          if (_minute == 0) {
+            if (_hour != 0) {
+              _hour--;
+              _minute = 59;
+            }
+          } else {
+            _minute--;
           }
+        }
+
+        notifyListeners();
+      });
+    }
+  }
+
+  void ExtrastartTimer() async {
+    // ExtraTimerProvider().startTimer();
+    _Extrahour = 0;
+    _Extraminute = 0;
+    _Extraseconds = 0;
+    _startEnable = false;
+    _stopEnable = true;
+    _continueEnable = false;
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_Extraseconds < 59) {
+        _Extraseconds++;
+      } else if (_Extraseconds == 59) {
+        _Extraseconds = 0;
+        if (_Extraminute == 59) {
+          _Extrahour++;
+          _Extraminute = 0;
         } else {
-          _minute--;
+          _Extraminute++;
         }
       }
 
@@ -110,11 +136,7 @@ class TimerProvider with ChangeNotifier {
     });
   }
 
-  void ExtrastartTimer() async {
-    ExtraTimerProvider().startTimer();
-    _Extrahour = 0;
-    _Extraminute = 0;
-    _Extraseconds = 0;
+  void continueExtraTimer() {
     _startEnable = false;
     _stopEnable = true;
     _continueEnable = false;

@@ -1,5 +1,4 @@
 import 'package:abc/demo_page.dart';
-import 'package:abc/provider/extra_time_provider.dart';
 import 'package:abc/provider/timer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     timer = Provider.of<TimerProvider>(context, listen: false);
-    Extratimer = Provider.of<ExtraTimerProvider>(context, listen: false);
-    timer.setVars(0, 1, 0);
+    // Extratimer = Provider.of<ExtraTimerProvider>(context, listen: false);
+    timer.setVars(0, 0, 5);
 
     // print(context.watch<TimerProvider>().minute);
   }
@@ -65,32 +64,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     (timer.startEnable)
                         ? ElevatedButton(
                             onPressed: () {
-                              timer.startTimer(0, 1, 0);
+                              timer.startTimer(0, 0, 5);
                             },
                             child: Text('Start'),
                           )
-                        : ElevatedButton(
-                            onPressed: null,
-                            child: Text('restart'),
-                          ),
-                    (timer.stopEnable)
-                        ? ElevatedButton(
-                            onPressed: timer.stopTimer,
-                            child: Text('Stop'),
-                          )
-                        : ElevatedButton(
-                            onPressed: null,
-                            child: Text('Stop'),
-                          ),
-                    (timer.continueEnable)
-                        ? ElevatedButton(
-                            onPressed: timer.continueTimer,
-                            child: Text('Continue'),
-                          )
-                        : ElevatedButton(
-                            onPressed: null,
-                            child: Text('Continue'),
-                          ),
+                        : (timer.stopEnable)
+                            ? ElevatedButton(
+                                onPressed: timer.stopTimer,
+                                child: Text('stop'),
+                              )
+                            : ElevatedButton(
+                                onPressed: timer.continueTimer,
+                                child: Text('continue'),
+                              ),
+
+                    // (timer.stopEnable)
+                    //     ? ElevatedButton(
+                    //         onPressed: timer.stopTimer,
+                    //         child: Text('Stop'),
+                    //       )
+                    //     : ElevatedButton(
+                    //         onPressed: null,
+                    //         child: Text('start'),
+                    //       ),
+                    // (timer.continueEnable)
+                    //     ? ElevatedButton(
+                    //         onPressed: timer.continueTimer,
+                    //         child: Text('Continue'),
+                    //       )
+                    //     : ElevatedButton(
+                    //         onPressed: null,
+                    //         child: Text('Continue'),
+                    //       ),
                   ],
                 ),
               ],
@@ -118,38 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 25,
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     (Extratimer.startEnable)
-                //         ? ElevatedButton(
-                //             onPressed: Extratimer.startTimer,
-                //             child: Text('Start'),
-                //           )
-                //         : ElevatedButton(
-                //             onPressed: null,
-                //             child: Text('Start'),
-                //           ),
-                //     (Extratimer.stopEnable)
-                //         ? ElevatedButton(
-                //             onPressed: Extratimer.stopTimer,
-                //             child: Text('Stop'),
-                //           )
-                //         : ElevatedButton(
-                //             onPressed: null,
-                //             child: Text('Stop'),
-                //           ),
-                //     (Extratimer.continueEnable)
-                //         ? ElevatedButton(
-                //             onPressed: Extratimer.continueTimer,
-                //             child: Text('Continue'),
-                //           )
-                //         : ElevatedButton(
-                //             onPressed: null,
-                //             child: Text('Continue'),
-                //           ),
-                //   ],
-                // ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
